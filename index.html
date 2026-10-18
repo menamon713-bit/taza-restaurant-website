@@ -168,6 +168,7 @@
            ========================================= */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
         .toast { background: var(--secondary); color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; margin-top: 10px; animation: slideIn 0.3s ease; }
+        .toast.error { background: #ff3333; }
         
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes dropBurger {
@@ -183,21 +184,11 @@
         }
 
         /* =========================================
-           الموبايل (تعديلات مهمة)
+           الموبايل
            ========================================= */
         @media (max-width: 768px) {
-            nav { 
-                padding: 15px 20px; 
-                flex-direction: row; 
-                flex-wrap: wrap; 
-                justify-content: space-between; 
-            }
-            .nav-links { 
-                order: 3; 
-                width: 100%; 
-                justify-content: center; 
-                margin-top: 15px; 
-            }
+            nav { padding: 15px 20px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; }
             .nav-actions { gap: 10px; }
             .login-btn { padding: 6px 10px; font-size: 0.9rem; }
             .hero h1 { font-size: 2.8rem; }
@@ -306,7 +297,7 @@
             <h2>تسجيل الدخول</h2>
             <input type="text" id="loginUser" placeholder="اسم المستخدم" required>
             <input type="password" id="loginPass" placeholder="كلمة المرور" required>
-            <button class="modal-btn" onclick="fakeLogin()">دخول</button>
+            <button class="modal-btn" onclick="login()">دخول</button>
         </div>
     </div>
 
@@ -315,7 +306,11 @@
 
     <!-- الجافاسكريبت -->
     <script>
-        // 1. بيانات المنيو
+        // 1. بيانات الدخول (اليوزر والباسورد بتوعك)
+        const VALID_USER = "admin";
+        const VALID_PASS = "Taza@2026!";
+
+        // 2. بيانات المنيو
         const menuData = [
             { id: 1, name: "برجر لحمة كلاسيك", price: 40, category: "burger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" },
             { id: 2, name: "برجر شيدر دبل", price: 50, category: "burger", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" },
@@ -325,7 +320,7 @@
 
         let cart = JSON.parse(localStorage.getItem('tazaCart')) || [];
 
-        // 2. إدارة المقدمة السينمائية
+        // 3. إدارة المقدمة السينمائية
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const introScreen = document.getElementById('intro-screen');
@@ -338,7 +333,7 @@
             }, 3500); 
         });
 
-        // 3. عرض المنيو
+        // 4. عرض المنيو
         function renderMenu(items) {
             const grid = document.getElementById('menuGrid');
             grid.innerHTML = '';
@@ -356,7 +351,7 @@
             });
         }
 
-        // 4. الفلترة
+        // 5. الفلترة
         function filterMenu(category) {
             document.querySelectorAll('.filter-btns button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
@@ -367,7 +362,7 @@
             }
         }
 
-        // 5. السلة
+        // 6. السلة
         function toggleCart() {
             document.getElementById('cartSidebar').classList.toggle('active');
             document.getElementById('overlay').style.display = document.getElementById('cartSidebar').classList.contains('active') ? 'block' : 'none';
@@ -378,7 +373,7 @@
             cart.push(product);
             localStorage.setItem('tazaCart', JSON.stringify(cart));
             updateCartUI();
-            showToast(`تمت إضافة ${product.name} للسلة!`);
+            showToast(`تمت إضافة ${product.name} للسلة!`, 'success');
         }
 
         function removeFromCart(index) {
@@ -414,9 +409,9 @@
             totalPrice.innerText = total;
         }
 
-        // 6. الطلب
+        // 7. الطلب
         function checkoutWhatsApp() {
-            if(cart.length === 0) { showToast('السلة فاضية!'); return; }
+            if(cart.length === 0) { showToast('السلة فاضية!', 'error'); return; }
             let phone = "201234567890"; // ⚠️ غير الرقم هنا
             let message = "مرحباً مطعم طازة، أود طلب الآتي:\n\n";
             let total = 0;
@@ -429,40 +424,60 @@
         }
 
         function checkoutPhone() {
-            if(cart.length === 0) { showToast('السلة فاضية!'); return; }
+            if(cart.length === 0) { showToast('السلة فاضية!', 'error'); return; }
             let phone = "+201234567890"; // ⚠️ غير الرقم هنا
             window.location.href = "tel:" + phone;
         }
 
-        // 7. نظام اللوجين (واجهة)
+        // 8. نظام اللوجين الحقيقي (وهمي)
         function openLogin() {
             document.getElementById('loginModal').style.display = 'flex';
         }
+        
         function closeLogin() {
             document.getElementById('loginModal').style.display = 'none';
         }
-        function fakeLogin() {
+
+        function login() {
             let user = document.getElementById('loginUser').value;
             let pass = document.getElementById('loginPass').value;
-            if(user && pass) {
-                showToast('تم تسجيل الدخول بنجاح!');
+            
+            // التحقق من قوة الباسورد (8 حروف، حرف كبير، رقم، ورمز)
+            let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if(!user || !pass) {
+                showToast('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+
+            if (!strongPassword.test(pass)) {
+                showToast('الباسورد ضعيف! لازم 8 حروف، وحرف كبير، ورقم، ورمز.', 'error');
+                return;
+            }
+
+            // التأكد من اليوزر والباسورد الصح
+            if (user === VALID_USER && pass === VALID_PASS) {
+                showToast('تم تسجيل الدخول بنجاح! أهلاً بك يا مدير.', 'success');
                 closeLogin();
-                // تفريغ الخانات بعد الدخول
                 document.getElementById('loginUser').value = '';
                 document.getElementById('loginPass').value = '';
             } else {
-                showToast('يرجى ملء جميع الحقول');
+                showToast('اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
             }
         }
 
-        // 8. الإشعارات
-        function showToast(message) {
+        // 9. الإشعارات
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'toast';
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
             toast.innerText = message;
             container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+            
+            setTimeout(() => { 
+                toast.style.opacity = '0'; 
+                setTimeout(() => toast.remove(), 300); 
+            }, 3000);
         }
 
         updateCartUI();
