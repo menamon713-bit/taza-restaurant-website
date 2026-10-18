@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم طازة | تجربة طعام فاخرة</title>
+    
+    <!-- استدعاء الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. المتغيرات العامة والأساسيات
+           ========================================= */
+        :root {
+            --primary: #FFD700;
+            --secondary: #25D366;
+            --bg-dark: #0a0a0a;
+            --bg-card: #151515;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-dark); color: var(--text-main); overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* =========================================
+           2. المقدمة السينمائية (البرجر)
+           ========================================= */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .intro-burger {
+            width: 200px; height: 200px; object-fit: contain; position: absolute; top: -200px;
+            animation: dropBurger 3.5s forwards cubic-bezier(0.25, 1, 0.5, 1);
+            filter: drop-shadow(0 20px 30px rgba(255, 215, 0, 0.3));
+        }
+        .intro-title {
+            font-size: 4rem; color: var(--primary); font-weight: 900; opacity: 0; margin-top: 50px;
+            animation: fadeTitle 3.5s forwards; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .intro-hidden { transform: translateY(-100%); }
+
+        /* =========================================
+           3. شريط التنقل (Navbar)
+           ========================================= */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary); text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-weight: 700; transition: 0.3s; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--primary); transition: 0.3s; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.5rem; transition: 0.3s; margin-right: 20px; }
+        .cart-icon:hover { color: var(--primary); transform: scale(1.1); }
+        .cart-count {
+            position: absolute; top: -10px; right: -15px; background: #ff3333; color: white;
+            font-size: 0.8rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* =========================================
+           4. شاشة البداية (Hero)
+           ========================================= */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop') center/cover fixed;
+            padding: 0 20px;
+        }
+        .hero h1 { font-size: 5rem; color: var(--primary); text-shadow: 0 0 30px rgba(255, 215, 0, 0.6); margin-bottom: 20px; }
+        .hero p { font-size: 1.5rem; margin-bottom: 40px; max-width: 600px; color: #ddd; }
+        .btn {
+            padding: 15px 45px; font-size: 1.2rem; font-weight: bold; color: #000;
+            background: var(--primary); border: none; border-radius: 50px; cursor: pointer;
+            transition: all 0.3s ease; display: inline-block; box-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        .btn:hover { transform: translateY(-5px) scale(1.05); background: #fff; }
+
+        /* =========================================
+           5. الأقسام العامة والمنيو
+           ========================================= */
+        .section-title { text-align: center; font-size: 3rem; color: var(--primary); margin-bottom: 40px; }
+        .about { padding: 120px 20px; text-align: center; max-width: 900px; margin: 0 auto; }
+        .about p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; }
+        
+        .menu-section { padding: 120px 20px; }
+        .filter-btns { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btns button {
+            padding: 10px 25px; background: transparent; border: 2px solid var(--primary);
+            color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .filter-btns button:hover, .filter-btns button.active { background: var(--primary); color: #000; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .card { background: var(--bg-card); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 20px; overflow: hidden; transition: 0.4s; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 25px; text-align: center; }
+        .card-content h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .card-content .price { color: var(--primary); font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; }
+        .add-btn { width: 100%; padding: 15px; background: transparent; color: var(--primary); border: 2px solid var(--primary); border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .add-btn:hover { background: var(--primary); color: #000; }
+
+        /* =========================================
+           6. الفوتر والسلة الجانبية
+           ========================================= */
+        footer { background: #050505; padding: 60px 20px 20px; text-align: center; border-top: 1px solid #222; }
+        .footer-content { display: flex; justify-content: space-around; flex-wrap: wrap; margin-bottom: 40px; gap: 30px; }
+        .footer-col h3 { color: var(--primary); margin-bottom: 20px; }
+        .footer-col p, .footer-col a { color: var(--text-muted); margin-bottom: 10px; display: block; }
+        .copyright { color: #666; border-top: 1px solid #222; padding-top: 20px; }
+
+        .cart-sidebar {
+            position: fixed; top: 0; left: -400px; width: 380px; height: 100vh;
+            background: #111; z-index: 2000; transition: 0.4s ease; padding: 25px;
+            display: flex; flex-direction: column;
+        }
+        .cart-sidebar.active { left: 0; }
+        .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; background: #1c1c1c; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .cart-total { border-top: 1px solid #333; padding-top: 20px; text-align: center; }
+        .action-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .checkout-btn { padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .call-btn { padding: 15px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
+
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .toast { background: var(--secondary); color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+
+        /* =========================================
+           7. الأنيميشن والموبايل
+           ========================================= */
+        @keyframes dropBurger {
+            0% { top: -200px; transform: rotate(0deg); }
+            40% { top: 45%; transform: translateY(-50%) rotate(15deg); }
+            60% { top: 45%; transform: translateY(-50%) rotate(-15deg); }
+            100% { top: 110vh; transform: translateY(0) rotate(45deg) scale(0.5); opacity: 0; }
+        }
+        @keyframes fadeTitle {
+            0%, 40% { opacity: 0; transform: translateY(20px); }
+            50%, 80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .nav-links { gap: 15px; font-size: 1rem; }
+            .hero h1 { font-size: 3rem; }
+            .hero p { font-size: 1.2rem; }
+            .section-title { font-size: 2.2rem; }
+            .cart-sidebar { width: 100%; left: -100%; }
+            .intro-burger { width: 130px; height: 130px; }
+            .intro-title { font-size: 2.2rem; margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- المقدمة السينمائية -->
+    <div id="intro-screen">
+        <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Burger" class="intro-burger">
+        <h1 class="intro-title">طازة</h1>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav>
+        <a href="#home" class="logo">طازة</a>
+        <ul class="nav-links">
+            <li><a href="#home">الرئيسية</a></li>
+            <li><a href="#about">عن المطعم</a></li>
+            <li><a href="#menu">المنيو</a></li>
+            <li><a href="#contact">اتصل بنا</a></li>
+        </ul>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </nav>
+
+    <!-- الهيرو -->
+    <section class="hero" id="home">
+        <h1>مطعم طازة</h1>
+        <p>طعم أصيل ومكونات طازة كل يوم. اطلب دلوقتي واستمتع!</p>
+        <a href="#menu" class="btn">تصفح المنيو</a>
+    </section>
+
+    <!-- عن المطعم -->
+    <section class="about" id="about">
+        <h2 class="section-title">عن مطعم طازة</h2>
+        <p>بدأت رحلتنا في مطعم طازة بهدف واحد: تقديم أفضل برجر وبروست في المنطقة. بنستخدم لحوم طازة 100%، وبنحضر كل وجبة بمكونات مختارة بعناية عشان نضمنلك تجربة طعم متتنسيش.</p>
+    </section>
+
+    <!-- المنيو -->
+    <section class="menu-section" id="menu">
+        <h2 class="section-title">قائمة الطعام</h2>
+        
+        <div class="filter-btns">
+            <button class="active" onclick="filterMenu('all')">الكل</button>
+            <button onclick="filterMenu('burger')">برجر</button>
+            <button onclick="filterMenu('chicken')">دجاج</button>
+        </div>
+        
+        <div class="menu-grid" id="menuGrid">
+            <!-- الكروت هتظهر هنا تلقائياً -->
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>مطعم طازة</h3>
+                <p>أشهى الوجبات السريعة بأفضل جودة.</p>
+            </div>
+            <div class="footer-col">
+                <h3>اتصل بنا</h3>
+                <!-- ⚠️ غير الرقم هنا -->
+                <a href="tel:+201234567890"><i class="fas fa-phone"></i> 01234567890</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> القاهرة، مصر</a>
+            </div>
+        </div>
+        <div class="copyright">جميع الحقوق محفوظة &copy; 2026 مطعم طازة.</div>
+    </footer>
+
+    <!-- السلة الجانبية -->
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>سلة الطلبات</h2>
+            <i class="fas fa-times close-cart" onclick="toggleCart()"></i>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align:center; color:#888;">السلة فاضية</p>
+        </div>
+        <div class="cart-total">
+            <h3>الإجمالي: <span id="totalPrice">0</span> ج.م</h3>
+            <div class="action-buttons">
+                <button class="checkout-btn" onclick="checkoutWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> إتمام الطلب واتساب
+                </button>
+                <button class="call-btn" onclick="checkoutPhone()">
+                    <i class="fas fa-phone-alt"></i> إتمام الطلب تلفونياً
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الإشعارات -->
+    <div id="toast-container"></div>
+
+    <!-- الجافاسكريبت -->
+    <script>
+        // 1. بيانات المنيو
+        const menuData = [
+            { id: 1, name: "برجر لحمة كلاسيك", price: 40, category: "burger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" },
+            { id: 2, name: "برجر شيدر دبل", price: 50, category: "burger", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" },
+            { id: 3, name: "بروست 4 قطع", price: 120, category: "chicken", img: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=500" },
+            { id: 4, name: "وجبة كرسبي", price: 175, category: "chicken", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('tazaCart')) || [];
+
+        // 2. إدارة المقدمة السينمائية
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const introScreen = document.getElementById('intro-screen');
+                introScreen.classList.add('intro-hidden');
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    document.body.style.overflow = 'auto'; 
+                    renderMenu(menuData); 
+                }, 1000); 
+            }, 3500); 
+        });
+
+        // 3. عرض المنيو
+        function renderMenu(items) {
+            const grid = document.getElementById('menuGrid');
+            grid.innerHTML = '';
+            items.forEach(item => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="card-content">
+                            <h3>${item.name}</h3>
+                            <p class="price">${item.price} ج.م</p>
+                            <button class="add-btn" onclick="addToCart(${item.id})">أضف للسلة</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. الفلترة
+        function filterMenu(category) {
+            document.querySelectorAll('.filter-btns button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if(category === 'all') {
+                renderMenu(menuData);
+            } else {
+                renderMenu(menuData.filter(item => item.category === category));
+            }
+        }
+
+        // 5. السلة
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+            document.getElementById('overlay').style.display = document.getElementById('cartSidebar').classList.contains('active') ? 'block' : 'none';
+        }
+
+        function addToCart(id) {
+            const product = menuData.find(item => item.id === id);
+            cart.push(product);
+            localStorage.setItem('tazaCart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`تمت إضافة ${product.name} للسلة!`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('tazaCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const totalPrice = document.getElementById('totalPrice');
+            cartItems.innerHTML = '';
+            let total = 0;
+            
+            if(cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align:center; color:#888;">السلة فاضية</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    cartItems.innerHTML += `
+                        <div class="cart-item">
+                            <div>
+                                <h4>${item.name}</h4>
+                                <p style="color:var(--primary);">${item.price} ج.م</p>
+                            </div>
+                            <button class="remove-item" style="background:none; border:none; color:#ff3333; cursor:pointer;" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                });
+            }
+            cartCount.innerText = cart.length;
+            totalPrice.innerText = total;
+        }
+
+        // 6. الطلب
+        function checkoutWhatsApp() {
+            if(cart.length === 0) { showToast('السلة فاضية!'); return; }
+            let phone = "201234567890"; // ⚠️ غير الرقم هنا
+            let message = "مرحباً مطعم طازة، أود طلب الآتي:\n\n";
+            let total = 0;
+            cart.forEach(item => {
+                message += `- ${item.name} (${item.price} ج.م)\n`;
+                total += item.price;
+            });
+            message += `\nالإجمالي: ${total} ج.م\n\nشكراً!`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function checkoutPhone() {
+            if(cart.length === 0) { showToast('السلة فاضية!'); return; }
+            let phone = "+201234567890"; // ⚠️ غير الرقم هنا
+            window.location.href = "tel:" + phone;
+        }
+
+        // 7. الإشعارات
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        updateCartUI();
+    </script>
+</body>
+</html>
