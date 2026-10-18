@@ -134,7 +134,7 @@
         .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
         .close-cart { cursor: pointer; font-size: 1.5rem; }
         .cart-items { flex: 1; overflow-y: auto; }
-        .cart-item { display: flex; justify-content: space-between; background: #1c1c1c; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #333; }
         .cart-total { border-top: 1px solid #333; padding-top: 20px; text-align: center; }
         .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         .checkout-btn { padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
@@ -259,7 +259,7 @@
             </div>
             <div class="footer-col">
                 <h3>اتصل بنا</h3>
-                <!-- ⚠️ غير الرقم هنا -->
+                <!-- ⚠️ غير الرقم هنا لرقم المطعم -->
                 <a href="tel:+201234567890"><i class="fas fa-phone"></i> 01234567890</a>
                 <a href="#"><i class="fas fa-map-marker-alt"></i> القاهرة، مصر</a>
             </div>
@@ -306,7 +306,7 @@
 
     <!-- الجافاسكريبت -->
     <script>
-        // 1. بيانات الدخول (اليوزر والباسورد بتوعك)
+        // 1. بيانات الدخول
         const VALID_USER = "admin";
         const VALID_PASS = "Taza@2026!";
 
@@ -380,6 +380,7 @@
             cart.splice(index, 1);
             localStorage.setItem('tazaCart', JSON.stringify(cart));
             updateCartUI();
+            showToast('تم حذف الطلب', 'success');
         }
 
         function updateCartUI() {
@@ -398,9 +399,9 @@
                         <div class="cart-item">
                             <div>
                                 <h4>${item.name}</h4>
-                                <p style="color:var(--primary);">${item.price} ج.م</p>
+                                <p style="color:var(--primary); font-weight:bold;">${item.price} ج.م</p>
                             </div>
-                            <button class="remove-item" style="background:none; border:none; color:#ff3333; cursor:pointer;" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                            <button onclick="removeFromCart(${index})" style="background: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; color: #ff3333; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s;">🗑️ إزالة</button>
                         </div>
                     `;
                 });
@@ -429,7 +430,7 @@
             window.location.href = "tel:" + phone;
         }
 
-        // 8. نظام اللوجين الحقيقي (وهمي)
+        // 8. نظام اللوجين
         function openLogin() {
             document.getElementById('loginModal').style.display = 'flex';
         }
@@ -442,7 +443,6 @@
             let user = document.getElementById('loginUser').value;
             let pass = document.getElementById('loginPass').value;
             
-            // التحقق من قوة الباسورد (8 حروف، حرف كبير، رقم، ورمز)
             let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
             if(!user || !pass) {
@@ -455,7 +455,6 @@
                 return;
             }
 
-            // التأكد من اليوزر والباسورد الصح
             if (user === VALID_USER && pass === VALID_PASS) {
                 showToast('تم تسجيل الدخول بنجاح! أهلاً بك يا مدير.', 'success');
                 closeLogin();
