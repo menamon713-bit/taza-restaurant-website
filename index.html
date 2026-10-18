@@ -6,7 +6,6 @@
     <title>مطعم طازة | تجربة طعام فاخرة</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- مكتبة الأيقونات (هنستخدمها كاحتياطي بس) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
@@ -103,7 +102,7 @@
         .filter-btns { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
         .filter-btns button {
             padding: 8px 20px; background: transparent; border: 2px solid var(--primary);
-            color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; font-family: inherit;
         }
         .filter-btns button.active, .filter-btns button:hover { background: var(--primary); color: #000; }
         
@@ -114,7 +113,7 @@
         .card-content { padding: 20px; text-align: center; }
         .card-content h3 { font-size: 1.3rem; margin-bottom: 10px; }
         .card-content .price { color: var(--primary); font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
-        .add-btn { width: 100%; padding: 12px; background: transparent; color: var(--primary); border: 2px solid var(--primary); border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .add-btn { width: 100%; padding: 12px; background: transparent; color: var(--primary); border: 2px solid var(--primary); border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: inherit; }
         .add-btn:hover { background: var(--primary); color: #000; }
 
         /* =========================================
@@ -136,19 +135,15 @@
         .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
         .cart-header h2 { color: var(--primary); font-size: 1.5rem; }
         
-        /* زرار الإغلاق الجديد */
-        .close-btn { 
-            background: transparent; border: none; color: #fff; font-size: 1.2rem; 
-            cursor: pointer; padding: 5px; transition: 0.3s; 
-        }
+        .close-btn { background: transparent; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 5px; transition: 0.3s; font-family: inherit; }
         .close-btn:hover { color: #ff3333; transform: scale(1.2); }
 
         .cart-items { flex: 1; overflow-y: auto; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #333; }
         .cart-total { border-top: 1px solid #333; padding-top: 20px; text-align: center; }
         .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .checkout-btn { padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .call-btn { padding: 15px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .checkout-btn { padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; }
+        .call-btn { padding: 15px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
 
         /* =========================================
@@ -163,7 +158,6 @@
             background: #151515; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px;
             border: 1px solid var(--primary); position: relative; box-shadow: 0 10px 30px rgba(255,215,0,0.2);
         }
-        /* زرار إغلاق المودال الجديد */
         .modal-close { position: absolute; top: 15px; left: 15px; background: none; border: none; color: #fff; cursor: pointer; font-size: 1.2rem; }
         .modal-close:hover { color: #ff3333; }
         
@@ -201,7 +195,7 @@
            ========================================= */
         @media (max-width: 768px) {
             nav { padding: 15px 20px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
-            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; }
+            .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 15px; gap: 15px; font-size: 0.9rem; }
             .nav-actions { gap: 10px; }
             .login-btn { padding: 6px 10px; font-size: 0.8rem; }
             .hero h1 { font-size: 2.8rem; }
@@ -255,11 +249,20 @@
     <!-- المنيو -->
     <section class="menu-section" id="menu">
         <h2 class="section-title">قائمة الطعام</h2>
+        
+        <!-- أزرار الفلترة -->
         <div class="filter-btns">
             <button class="active" onclick="filterMenu('all')">الكل</button>
             <button onclick="filterMenu('burger')">برجر</button>
             <button onclick="filterMenu('chicken')">دجاج</button>
+            <button onclick="filterMenu('sandwiches')">ساندوتشات</button>
+            <button onclick="filterMenu('meals')">وجبات</button>
+            <button onclick="filterMenu('hawawshi')">حواوشي</button>
+            <button onclick="filterMenu('pizza')">بيتزا</button>
+            <button onclick="filterMenu('pasta')">مكرونة</button>
+            <button onclick="filterMenu('drinks')">مشروبات</button>
         </div>
+        
         <div class="menu-grid" id="menuGrid"></div>
     </section>
 
@@ -272,8 +275,8 @@
             </div>
             <div class="footer-col">
                 <h3>اتصل بنا</h3>
-                <a href="tel:+201234567890">📞 01234567890</a>
-                <a href="#">📍 القاهرة، مصر</a>
+                <a href="tel:+201225802070">📞 01225802070</a>
+                <a href="#">📍 الكبش، قسم ثان سوهاج، محافظة سوهاج</a>
             </div>
         </div>
         <div class="copyright">جميع الحقوق محفوظة &copy; 2026 مطعم طازة.</div>
@@ -284,7 +287,6 @@
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h2>سلة الطلبات</h2>
-            <!-- زرار الإغلاق الواضح -->
             <button class="close-btn" onclick="toggleCart()">❌ إغلاق</button>
         </div>
         <div class="cart-items" id="cartItems">
@@ -306,7 +308,6 @@
     <!-- نافذة تسجيل الدخول -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-content">
-            <!-- زرار الإغلاق الواضح -->
             <button class="modal-close" onclick="closeLogin()">❌ إغلاق</button>
             <h2>تسجيل الدخول</h2>
             <input type="text" id="loginUser" placeholder="اسم المستخدم" required>
@@ -324,18 +325,64 @@
         const VALID_USER = "admin";
         const VALID_PASS = "Taza@2026!";
 
-        // 2. بيانات المنيو
+        // 2. بيانات المنيو الحقيقية لمطعم طازة
         const menuData = [
-            { id: 1, name: "برجر لحمة كلاسيك", price: 40, category: "burger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" },
-            { id: 2, name: "برجر شيدر دبل", price: 50, category: "burger", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" },
-            { id: 3, name: "بروست 4 قطع", price: 120, category: "chicken", img: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=500" },
-            { id: 4, name: "وجبة كرسبي", price: 175, category: "chicken", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" }
+            // --- برجر (Burger) ---
+            { id: 1, name: "برجر لحمة", price: 40, category: "burger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" },
+            { id: 2, name: "برجر لحمة دبل", price: 60, category: "burger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" },
+            { id: 3, name: "برجر فراخ", price: 40, category: "burger", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" },
+            { id: 4, name: "برجر فراخ دبل", price: 60, category: "burger", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=500" },
+            { id: 5, name: "اسنيك برجر", price: 50, category: "burger", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=500" },
+
+            // --- دجاج (Chicken) ---
+            { id: 6, name: "وجبة دجاج 2 قطعة", price: 90, category: "chicken", img: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=500" },
+            { id: 7, name: "وجبة دجاج 4 قطع", price: 140, category: "chicken", img: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=500" },
+            { id: 8, name: "شطيرة دجاج", price: 40, category: "chicken", img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?q=80&w=500" },
+            { id: 9, name: "شطيرة شيدر تشيكن", price: 45, category: "chicken", img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?q=80&w=500" },
+
+            // --- ساندوتشات (Sandwiches) ---
+            { id: 10, name: "كبدة إسكندراني", price: 30, category: "sandwiches", img: "https://images.unsplash.com/photo-1529042410759-befb1204b468?q=80&w=500" },
+            { id: 11, name: "كفتة مشوية", price: 60, category: "sandwiches", img: "https://images.unsplash.com/photo-1529042410759-befb1204b468?q=80&w=500" },
+            { id: 12, name: "شاورما فراخ", price: 60, category: "sandwiches", img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?q=80&w=500" },
+            { id: 13, name: "شاورما لحمة", price: 75, category: "sandwiches", img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?q=80&w=500" },
+            { id: 14, name: "شيش طاووق", price: 45, category: "sandwiches", img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?q=80&w=500" },
+            { id: 15, name: "سجق بلدي", price: 55, category: "sandwiches", img: "https://images.unsplash.com/photo-1585325701956-60dd9c8553bc?q=80&w=500" },
+
+            // --- وجبات (Meals) ---
+            { id: 16, name: "وجبة كرسبي", price: 120, category: "meals", img: "https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=500" },
+            { id: 17, name: "وجبة شاورما فراخ", price: 175, category: "meals", img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?q=80&w=500" },
+            { id: 18, name: "وجبة ميكس جريل", price: 270, category: "meals", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500" },
+            { id: 19, name: "وجبة كفتة", price: 180, category: "meals", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=500" },
+
+            // --- حواوشي (Hawawshi) ---
+            { id: 20, name: "حواوشي لحمة", price: 70, category: "hawawshi", img: "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?q=80&w=500" },
+            { id: 21, name: "حواوشي شاورما فراخ", price: 70, category: "hawawshi", img: "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?q=80&w=500" },
+            { id: 22, name: "حواوشي ميكس", price: 80, category: "hawawshi", img: "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?q=80&w=500" },
+
+            // --- بيتزا (Pizza) ---
+            { id: 23, name: "بيتزا مارجريتا", price: 90, category: "pizza", img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=500" },
+            { id: 24, name: "بيتزا شاورما فراخ", price: 140, category: "pizza", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500" },
+            { id: 25, name: "بيتزا ميكس لحوم", price: 180, category: "pizza", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500" },
+            { id: 26, name: "بيتزا سوبر كرانشي", price: 180, category: "pizza", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500" },
+
+            // --- مكرونة (Pasta) ---
+            { id: 27, name: "مكرونة بشاميل", price: 110, category: "pasta", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=500" },
+            { id: 28, name: "مكرونة فراخ", price: 120, category: "pasta", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=500" },
+            { id: 29, name: "مكرونة ميكس لحوم", price: 140, category: "pasta", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=500" },
+            { id: 30, name: "مكرونة جمبري", price: 150, category: "pasta", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=500" },
+
+            // --- مشروبات (Drinks) ---
+            { id: 31, name: "بيبسي بوارج", price: 20, category: "drinks", img: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?q=80&w=500" },
+            { id: 32, name: "مياه معدنية", price: 15, category: "drinks", img: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=500" },
+            { id: 33, name: "مياه غازية", price: 15, category: "drinks", img: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?q=80&w=500" }
         ];
 
         let cart = JSON.parse(localStorage.getItem('tazaCart')) || [];
 
-        // 3. إدارة المقدمة السينمائية
+        // 3. إدارة المقدمة السينمائية + التأكد من تسجيل الدخول
         window.addEventListener('load', () => {
+            updateLoginUI(); // تشغيل حالة تسجيل الدخول أول ما الصفحة تفتح
+
             setTimeout(() => {
                 const introScreen = document.getElementById('intro-screen');
                 introScreen.classList.add('intro-hidden');
@@ -427,7 +474,9 @@
         // 7. الطلب
         function checkoutWhatsApp() {
             if(cart.length === 0) { showToast('السلة فاضية!', 'error'); return; }
-            let phone = "201234567890"; // ⚠️ غير الرقم هنا
+            
+            let phone = "201225802070"; 
+            
             let message = "مرحباً مطعم طازة، أود طلب الآتي:\n\n";
             let total = 0;
             cart.forEach(item => {
@@ -440,11 +489,13 @@
 
         function checkoutPhone() {
             if(cart.length === 0) { showToast('السلة فاضية!', 'error'); return; }
-            let phone = "+201234567890"; // ⚠️ غير الرقم هنا
+            
+            let phone = "+201225802070"; 
+            
             window.location.href = "tel:" + phone;
         }
 
-        // 8. نظام اللوجين
+        // 8. نظام اللوجين (مع حفظ الحالة في الـ localStorage)
         function openLogin() {
             document.getElementById('loginModal').style.display = 'flex';
         }
@@ -457,6 +508,7 @@
             let user = document.getElementById('loginUser').value;
             let pass = document.getElementById('loginPass').value;
             
+            // التحقق من قوة الباسورد
             let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
             if(!user || !pass) {
@@ -471,15 +523,14 @@
 
             if (user === VALID_USER && pass === VALID_PASS) {
                 showToast('تم تسجيل الدخول بنجاح! أهلاً بك يا مدير.', 'success');
-                closeLogin();
                 
-                // تغيير شكل الزرار عشان يثبت إنه سجل دخول
-                const loginBtn = document.getElementById('loginBtn');
-                loginBtn.innerText = "أهلاً admin (خروج)";
-                loginBtn.style.backgroundColor = "var(--primary)";
-                loginBtn.style.color = "#000";
-                loginBtn.setAttribute('onclick', 'logout()');
-
+                // حفظ اسم المستخدم في المتصفح
+                localStorage.setItem('tazaUser', user);
+                
+                closeLogin();
+                updateLoginUI(); // تحديث شكل الزرار
+                
+                // تفريغ الخانات
                 document.getElementById('loginUser').value = '';
                 document.getElementById('loginPass').value = '';
             } else {
@@ -489,11 +540,31 @@
 
         function logout() {
             showToast('تم تسجيل الخروج بنجاح', 'success');
+            
+            // مسح اسم المستخدم من المتصفح
+            localStorage.removeItem('tazaUser');
+            
+            updateLoginUI(); // تحديث شكل الزرار
+        }
+
+        // دالة عشان تتحكم في شكل زرار تسجيل الدخول بناءً على حالة الحفظ
+        function updateLoginUI() {
             const loginBtn = document.getElementById('loginBtn');
-            loginBtn.innerText = "تسجيل الدخول";
-            loginBtn.style.backgroundColor = "transparent";
-            loginBtn.style.color = "var(--primary)";
-            loginBtn.setAttribute('onclick', 'openLogin()');
+            const savedUser = localStorage.getItem('tazaUser');
+
+            if (savedUser) {
+                // لو المستخدم مسجل دخول
+                loginBtn.innerText = `أهلاً ${savedUser} (خروج)`;
+                loginBtn.style.backgroundColor = "var(--primary)";
+                loginBtn.style.color = "#000";
+                loginBtn.setAttribute('onclick', 'logout()');
+            } else {
+                // لو مش مسجل دخول
+                loginBtn.innerText = "تسجيل الدخول";
+                loginBtn.style.backgroundColor = "transparent";
+                loginBtn.style.color = "var(--primary)";
+                loginBtn.setAttribute('onclick', 'openLogin()');
+            }
         }
 
         // 9. الإشعارات
